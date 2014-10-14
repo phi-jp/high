@@ -1,5 +1,5 @@
 /*
- * high.js 0.0.0
+ * high.js 0.0.1
  * http://github.com/phi-jp/high
  * MIT Licensed
  * 
@@ -528,22 +528,13 @@
      * @class global.Math
      * Mathの拡張
      */
-    
-    /**
-     * @method
-     * クランプ
-     */
-    Math.clamp = function(x, a, b) {
-//        return ( Math.max( Math.min(x, ), min ) )
-        return (x < a) ? a : ( (x > b) ? b : x );
-    };
+
     
     /**
      * @property    DEG_TO_RAD
      * Degree to Radian.
      */
     Math.DEG_TO_RAD = Math.PI/180;
-    
     
     /**
      * @property    RAD_TO_DEG
@@ -567,55 +558,39 @@
         return rad * Math.RAD_TO_DEG;
     };
     
+
     
+    /**
+     * @method
+     * クランプ
+     */
+    Math.defineFunction("clamp", function(value, min, max) {
+        return (value < min) ? min : ( (value > max) ? max : value );
+    });
+    
+    /**
+     * @method
+     * min <= value <= max のとき true を返す
+     */
+    Math.defineFunction("inside", function(value, min, max) {
+        return (value >= min) && (value) <= max;
+    });
     
     /**
      * @method
      * ランダムな値を指定された範囲内で生成
      */
-    Math.rand = function(min, max) {
+    Math.defineFunction("rand", function(min, max) {
         return window.Math.floor( Math.random()*(max-min+1) ) + min;
-    };
+    });
     
     /**
      * @method
      * ランダムな値を指定された範囲内で生成
      */
-    Math.randf= function(min, max) {
+    Math.defineFunction("randf", function(min, max) {
         return window.Math.random()*(max-min)+min;
-    };
-
-    /**
-     * @method
-     * 長さを取得
-     */
-    Math.magnitude = function() {
-        return Math.sqrt(Math.magnitudeSq.apply(null, arguments));
-    };
-    
-    
-    /**
-     * @method
-     * 長さの２乗を取得
-     */
-    Math.magnitudeSq = function() {
-        var n = 0;
-        
-        for (var i=0,len=arguments.length; i<len; ++i) {
-            n += arguments[i]*arguments[i];
-        }
-        
-        return n;
-    };
-
-
-    /**
-     * @method
-     * a <= x <= b のとき true を返す
-     */
-    Math.inside = function(x, a, b) {
-        return (x >= a) && (x) <= b;
-    };
+    });
     
 })();
 

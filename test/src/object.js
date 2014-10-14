@@ -1,5 +1,5 @@
 
-describe('core.Object', function() {
+describe('#Object', function() {
     
     it('$forIn', function() {
         var obj = { name: 'phi', age: 25, bloodType: 'O' };

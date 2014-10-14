@@ -2,7 +2,7 @@
  *
  */
 
-describe('Math', function() {
+describe('#Math', function() {
     
     it('degToRad', function() {
         assert.equal(Math.degToRad(180), Math.PI);
