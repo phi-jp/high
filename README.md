@@ -20,3 +20,17 @@ $npm install high
 ```js
 require("high");
 ```
+
+
+## Documents
+
+Coming soon...
+
+## Examples
+
+Coming soon...
+
+
+## Author
+
+@[phi_jp](http://twitter.com/phi_jp) in twitter
