@@ -1,6 +1,7 @@
 # high
 
-high is a  JavaScript library
+high is a  JavaScript library.  
+It is a library to add the function that the JavaScript should originally have to.
 
 
 ## Installation
