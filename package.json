@@ -1,0 +1,22 @@
+{
+  "name": "high",
+  "version": "0.0.0",
+  "description": "high is a JavaScript library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/phi-jp/high.git"
+  },
+  "keywords": [
+    "javascript"
+  ],
+  "author": "phi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phi-jp/high/issues"
+  },
+  "homepage": "https://github.com/phi-jp/high"
+}
