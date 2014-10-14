@@ -1,752 +1,10 @@
 /*
- * high.js 0.0.1
+ * high.js 0.0.2
  * http://github.com/phi-jp/high
  * MIT Licensed
  * 
  * Copyright (C) 2010 phi, http://tmlife.net
  */
-/*
- * array.js
- */
-
-(function() {
-    
-    /**
-     * @class   global.Array
-     * Arrayの拡張
-     * 
-     *      @example display
-     *      [1, 2, 3].first;
-     */
-    
-    /**
-     * @property    first
-     * 最初の要素
-     */
-    Array.prototype.accessor("first", {
-        "get": function()   { return this[0]; },
-        "set": function(v)  { this[0] = v; }
-    });
-    
-    /**
-     * @property    last
-     * 最後の要素
-     */
-    Array.prototype.accessor("last", {
-        "get": function()   { return this[this.length-1]; },
-        "set": function(v)  { this[this.length-1] = v; }
-    });
-
-    /**
-     * @method  equals
-     * 渡された配列と等しいかどうかをチェック
-     */
-    Array.defineInstanceMethod("equals", function(arr) {
-        // 長さチェック
-        if (this.length !== arr.length) return false;
-        
-        for (var i=0,len=this.length; i<len; ++i) {
-            if (this[i] !== arr[i]) {
-                return false;
-            }
-        }
-        return true;
-    });
-    
-    /**
-     * @method  deepEquals
-     * ネストされている配列含め渡された配列と等しいかどうかをチェック
-     * equalsDeep にするか検討. (Java では deepEquals なのでとりあえず合わせとく)
-     */
-    Array.defineInstanceMethod("deepEquals", function(arr) {
-        // 長さチェック
-        if (this.length !== arr.length) return false;
-        
-        for (var i=0,len=this.length; i<len; ++i) {
-            var result = (this[i].deepEquals) ? this[i].deepEquals(arr[i]) : (this[i] === arr[i]);
-            if (result === false) {
-                return false;
-            }
-        }
-        return true;
-    });
-
-    /**
-     * @property    contains
-     * 要素が含まれいるかをチェック
-     */
-    Array.defineInstanceMethod("contains", function(item, fromIndex) {
-        return this.indexOf(item, fromIndex) != -1;
-    });
-    
-    /**
-     * @method  at
-     * ループ添字アクセス(Ruby っぽいやつ)
-     */
-    Array.defineInstanceMethod("at", function(i) {
-        i%=this.length;
-        i+=this.length;
-        i%=this.length;
-        return this[i];
-    });
-    
-    
-    /**
-     * @method  swap
-     * a番目 と b番目 を入れ替える
-     */
-    Array.defineInstanceMethod("swap", function(a, b) {
-        var temp = this[a];
-        this[a] = this[b];
-        this[b] = temp;
-        
-        return this;
-    });
-    
-    
-    /**
-     * @method  erase
-     * elm と一致する要素を削除
-     */
-    Array.defineInstanceMethod("erase", function(elm) {
-        var index  = this.indexOf(elm);
-        if (index >= 0) {
-            this.splice(index, 1);
-        }
-        return this;
-    });
-    
-    /**
-     * @method  eraseAll
-     * elm と一致する要素を全て削除
-     */
-    Array.defineInstanceMethod("eraseAll", function(elm) {
-        for (var i=0,len=this.length; i<len; ++i) {
-            if (this[i] == elm) {
-                this.splice(i--, 1);
-            }
-        }
-        return this;
-    });
-    
-    /**
-     * @method  eraseIf
-     * 条件にマッチした要素を削除
-     */
-    Array.defineInstanceMethod("eraseIf", function(fn) {
-        for (var i=0,len=this.length; i<len; ++i) {
-            if ( fn(this[i], i, this) ) {
-                this.splice(i, 1);
-                break;
-            }
-            // if ( fn(this[i], i, this) ) { this.splice(i--, 1); }
-        }
-        return this;
-    });
-    
-    /**
-     * @method  eraseIfAll
-     * 条件にマッチした要素を削除
-     */
-    Array.defineInstanceMethod("eraseIfAll", function(fn) {
-        for (var i=0,len=this.length; i<len; ++i) {
-            if ( fn(this[i], i, this) ) {
-                this.splice(i, 1);
-            }
-        }
-        return this;
-    });
-    
-    /**
-     * @method  random
-     * 要素の中からランダムで取り出す
-     */
-    Array.defineInstanceMethod("random", function(min, max) {
-        min = min || 0;
-        max = max || this.length-1;
-        return this[ Math.rand(min, max) ];
-    });
-    
-    /**
-     * @method  pickup
-     * 要素の中からランダムで取り出す
-     */
-    Array.defineInstanceMethod("pickup", function(min, max) {
-        min = min || 0;
-        max = max || this.length-1;
-        return this[ Math.rand(min, max) ];
-    });
-    
-    /**
-     * @method  uniq
-     * 重複削除
-     */
-    Array.defineInstanceMethod("uniq", function(deep) {
-        return this.filter(function(value, index, self) {
-            return self.indexOf(value) === index;
-        });
-    });
-    
-
-    /**
-     * @method  flatten
-     * フラット.
-     * Ruby のやつ.
-     */
-    Array.defineInstanceMethod("flatten", function(level) {
-        var arr = null;
-
-        if (level) {
-            arr = this;
-            for (var i=0; i<level; ++i) {
-                arr = Array.prototype.concat.apply([], arr);
-            }
-        }
-        else {
-            // 完全フラット
-            arr = this.reduce(function (previousValue, curentValue) {
-                return Array.isArray(curentValue) ?
-                    previousValue.concat(curentValue.flatten()) : previousValue.concat(curentValue);
-            }, []);
-        }
-
-        return arr;
-    });
-    
-    /**
-     * @method  clone
-     * 配列をクローン
-     */
-    Array.defineInstanceMethod("clone", function(deep) {
-        if (deep == true) {
-            var a = Array(this.length);
-            for (var i=0,len=this.length; i<len; ++i) {
-                a[i] = (this[i].clone) ? this[i].clone(deep) : this[i];
-            }
-            return a;
-        };
-        
-        return Array.prototype.slice.apply(this);
-    });
-    
-    /**
-     * @method  clear
-     * クリア
-     */
-    Array.defineInstanceMethod("clear", function() {
-        this.length = 0;
-        return this;
-    });
-    
-    /**
-     * @method  fill
-     * 特定の値で満たす
-     */
-    Array.defineInstanceMethod("fill", function(value, start, end) {
-        start = start || 0;
-        end   = end   || (this.length);
-        
-        for (var i=start; i<end; ++i) {
-            this[i] = value;
-        }
-        
-        return this;
-    });
-    
-
-    /**
-     * @method  range
-     * python のやつ
-     */
-    Array.defineInstanceMethod("range", function(start, end, step) {
-        if (arguments.length == 1) {
-            this.clear();
-            for (var i=0; i<start; ++i) this[i] = i;
-        }
-        else if (start < end){
-            step  = step || 1;
-            this.clear();
-            for (var i=start, index=0; i<end; i+=step, ++index) {
-                this[index] = i;
-            }
-        }
-        else {
-            step  = step || -1;
-            this.clear();
-            for (var i=start, index=0; i>end; i+=step, ++index) {
-                this[index] = i;
-            }
-        }
-        
-        return this;
-    });
-    
-    /**
-     * @method  shuffle
-     * シャッフル
-     */
-    Array.defineInstanceMethod("shuffle", function() {
-        for (var i=0,len=this.length; i<len; ++i) {
-            var j = Math.rand(0, len-1);
-            
-            if (i != j) {
-                this.swap(i, j);
-            }
-        }
-        
-        return this;
-    });
-
-    /**
-     * @method  sum
-     * 合計
-     */
-    Array.defineInstanceMethod("sum", function() {
-        var sum = 0;
-        for (var i=0,len=this.length; i<len; ++i) {
-            sum += this[i];
-        }
-        return sum;
-    });
-
-    /**
-     * @method  average
-     * 平均
-     */
-    Array.defineInstanceMethod("average", function() {
-        var sum = 0;
-        var len = this.length;
-        for (var i=0; i<len; ++i) {
-            sum += this[i];
-        }
-        return sum/len;
-    });
-
-    /**
-     * @method  each
-     * 繰り返し
-     * チェーンメソッド対応
-     */
-    Array.defineInstanceMethod("each", function() {
-        this.forEach.apply(this, arguments);
-        return this;
-    });
-
-    
-    /**
-     * @method  toULElement
-     * ULElement に変換
-     */
-    Array.defineInstanceMethod("toULElement", function(){
-        // TODO: 
-    });
-
-    /**
-     * @method  toOLElement
-     * OLElement に変換
-     */
-    Array.defineInstanceMethod("toOLElement", function(){
-        // TODO:
-    });
-
-    
-    /**
-     * @static
-     * @method  range
-     * range
-     */
-    Array.defineFunction("range", function(start, end, step) {
-        return Array.prototype.range.apply([], arguments);
-    });
-    
-})();
-
-
-/*
- * date.js
- */
-
-(function() {
-    
-    /**
-     * @class   global.Date
-     * Date(日付)の拡張
-     */
-    
-    var MONTH = [
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ];
-    
-    var WEEK = [
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-    ];
-    
-    /**
-     * @method  format
-     * 日付フォーマットに合わせた文字列を返す
-     */
-    Date.defineInstanceMethod("format", function(pattern) {
-        /*
-        var str = "{y}/{m}/{d}".format({
-            y: this.getYear()+1900,
-            m: this.getMonth()+1,
-            d: this.getDate(),
-        });
-        
-        return str;
-        */
-        
-        var year    = this.getFullYear();
-        var month   = this.getMonth();
-        var date    = this.getDate();
-        var day     = this.getDay();
-        var hours   = this.getHours();
-        var minutes = this.getMinutes();
-        var seconds = this.getSeconds();
-        var millseconds = this.getMilliseconds();
-        var str = "";
-        
-        for (var i=0,len=pattern.length; i<len; ++i) {
-            var ch = pattern.charAt(i);
-            var temp = "";
-            switch(ch) {
-                // 日
-                case "d": temp = date.padding(2, '0'); break;
-                case "D": temp = WEEK[day].substr(0, 3); break;
-                case "j": temp = date; break;
-                case "l": temp = WEEK[day]; break;
-                // case "N": temp = ; break;
-                // case "S": temp = ; break;
-                // case "w": temp = ; break;
-                // case "z": temp = ; break;
-                
-                // 月
-                case "F": temp = MONTH[month]; break;
-                case "m": temp = (month+1).padding(2, '0'); break;
-                case "M": temp = MONTH[month].substr(0, 3); break;
-                case "n": temp = (month+1); break;
-                // case "t": temp = (month+1); break;
-                
-                // 年
-                // case "L": temp = ; break;
-                // case "o": temp = ; break;
-                case "Y": temp = year; break;
-                case "y": temp = year.toString().substr(2, 2); break;
-                
-                
-                // 時間
-                // case "a": temp = ; break;
-                // case "A": temp = ; break;
-                // case "B": temp = ; break;
-                // case "g": temp = ; break;
-                case "G": temp = hours; break;
-                // case "h": temp = ; break;
-                case "H": temp = hours.padding(2, '0'); break;
-                case "i": temp = minutes.padding(2, '0'); break;
-                case "s": temp = seconds.padding(2, '0'); break;
-                case "S": temp = millseconds.padding(3, '0'); break;
-                
-                default : temp = ch; break;
-            }
-            str += temp;
-        }
-        return str;
-    });
-    
-})();
-
-
-/*
- * function.js
- */
-
-(function() {
-    
-    /**
-     * @class   global.Function
-     * Functionの拡張
-     */
-    if (!Function.prototype.bind) {
-        /**
-         * @member  global.Function
-         * @method  bind
-         * バインド
-         */
-        Function.defineInstanceMethod("bind", function(obj) {
-            var self = this;
-            
-            return function() {
-                self.apply(obj, arguments);
-            };
-        });
-    }
-
-
-    // 関数名（無名関数は空文字列）を取得 (IE用パッチ)
-    if (!Function.prototype.$has("name")) {
-        Function.prototype.getter("name", function() {
-            return (''+this).replace(/^\s*function\s*([^\(]*)[\S\s]+$/im, '$1');
-        });
-    }
-    
-
-    /**
-     * @method  toArrayFunction
-     * 関数を配列対応関数に変換.
-     * forEach の逆アプローチ的な感じ.
-     * 配列を継承したクラスなどに使用する.
-     * ## Example
-     *      var hoge = function(n) { console.log(this*n); return this*n; };
-     *      var arr = [5, 10, 15];
-     *      arr.hogeArray = hoge.toArrayFunction();
-     *      var result = arr.hogeArray(100);
-     *      console.log(result);
-     */
-    Function.defineInstanceMethod("toArrayFunction", function() {
-        var self = this;
-        return function() {
-            var resultList = [];
-            for (var i=0,len=this.length; i<len; ++i) {
-                resultList.push( self.apply(this[i], arguments) );
-            }
-            return resultList;
-        }
-    });
-    
-    // forEach や map はもう標準化されてきてるので実装しないよん♪
-    
-})();
-
-
-/*
- * math.js
- */
-
-(function() {
-    
-    /**
-     * @class global.Math
-     * Mathの拡張
-     */
-
-    
-    /**
-     * @property    DEG_TO_RAD
-     * Degree to Radian.
-     */
-    Math.DEG_TO_RAD = Math.PI/180;
-    
-    /**
-     * @property    RAD_TO_DEG
-     * Radian to Degree.
-     */
-    Math.RAD_TO_DEG = 180/Math.PI;
-    
-    /**
-     * @method
-     * Degree を Radian に変換
-     */
-    Math.degToRad = function(deg) {
-        return deg * Math.DEG_TO_RAD;
-    };
-    
-    /**
-     * @method
-     * Radian を Degree に変換
-     */
-    Math.radToDeg = function(rad) {
-        return rad * Math.RAD_TO_DEG;
-    };
-    
-
-    
-    /**
-     * @method
-     * クランプ
-     */
-    Math.defineFunction("clamp", function(value, min, max) {
-        return (value < min) ? min : ( (value > max) ? max : value );
-    });
-    
-    /**
-     * @method
-     * min <= value <= max のとき true を返す
-     */
-    Math.defineFunction("inside", function(value, min, max) {
-        return (value >= min) && (value) <= max;
-    });
-    
-    /**
-     * @method
-     * ランダムな値を指定された範囲内で生成
-     */
-    Math.defineFunction("rand", function(min, max) {
-        return window.Math.floor( Math.random()*(max-min+1) ) + min;
-    });
-    
-    /**
-     * @method
-     * ランダムな値を指定された範囲内で生成
-     */
-    Math.defineFunction("randf", function(min, max) {
-        return window.Math.random()*(max-min)+min;
-    });
-    
-})();
-
-
-/*
- * number.js
- */
-
-(function() {
-    
-    /**
-     * @class global.Number
-     * Numberの拡張
-     */
-    
-    /**
-     * @method  round
-     * 四捨五入
-     * 桁数指定版
-     */
-    Number.defineInstanceMethod("round", function(figure) {
-        figure = figure || 0;
-        var base = Math.pow(10, figure);
-        var temp = this * base;
-        temp = Math.round(temp);
-        return temp/base;
-    });
-    
-    /**
-     * @method  ceil
-     * 切り上げ.
-     * 桁数指定版
-     */
-    Number.defineInstanceMethod("ceil",  function(figure) {
-        figure = figure || 0;
-        var base = Math.pow(10, figure);
-        var temp = this * base;
-        temp = Math.ceil(temp);
-        return temp/base;
-    });
-    /**
-     * @method  floor
-     * 切り捨て
-     * 桁数指定版
-     */
-    Number.defineInstanceMethod("floor",  function(figure) {
-        figure = figure || 0;
-        var base = Math.pow(10, figure);
-        var temp = this * base;
-        temp = Math.floor(temp);
-        
-        // ~~this
-        // this|0
-        
-        return temp/base;
-    });
-    
-    /**
-     * @method  toInt
-     * integer 型に変換する
-     */
-    Number.defineInstanceMethod("toInt",  function() {
-        return (this | 0);
-    });
-    
-    /**
-     * @method  toHex
-     * 16進数化
-     */
-    Number.defineInstanceMethod("toHex",  function() {
-        return this.toString(16);
-    });
-    
-    /**
-     * @method  toBin
-     * 2進数化
-     */
-    Number.defineInstanceMethod("toBin",  function() {
-        return this.toString(2);
-    });
-    
-    
-    /**
-     * @method  toUnsigned
-     * unsigned 型に変換する
-     */
-    Number.defineInstanceMethod("toUnsigned",  function() {
-        return this >>> 0;
-    });
-    
-    /**
-     * @method  padding
-     * 文字埋め
-     */
-    Number.defineInstanceMethod("padding",  function(n, ch) {
-        var str = this+'';
-        n  = n-str.length;
-        ch = ch || '0';
-        
-        while(n-- > 0) { str = ch + str; }
-        
-        return str;
-    });
-    
-    /**
-     * @method  times
-     * 数値分繰り返す
-     */
-    Number.defineInstanceMethod("times",  function(fn, self) {
-        self = self || this;
-        for (var i=0; i<this; ++i) {
-            fn.call(self, i);
-        }
-        return this;
-    });
-    
-    /**
-     * @method  upto
-     * インクリメント繰り返し
-     */
-    Number.defineInstanceMethod("upto",  function(t, fn, self) {
-        self = self || this;
-        for (var i=+this; i<=t; ++i) {
-            fn.call(self, i);
-        }
-        return this;
-    });
-    
-    /**
-     * @method  upto
-     * デクリメント繰り返し
-     */
-    Number.defineInstanceMethod("downto",  function(t, fn, self) {
-        self = self || this;
-        for (var i=+this; i>=t; --i) {
-            fn.call(self, i);
-        }
-        return this;
-    });
-
-    /**
-     * @method step
-     * ステップ繰り返し(float対応)
-     */
-    Number.defineInstanceMethod("step",  function(limit, step, fn, self) {
-        self = self || this;
-        for (var i=+this; i<=limit; i+=step) {
-            fn.call(self, i);
-        }
-        return this;
-    });
-
-    
-})();
-
-
 /*
  * object.js
  */
@@ -1160,3 +418,745 @@
     
     
 })();
+
+/*
+ * number.js
+ */
+
+(function() {
+    
+    /**
+     * @class global.Number
+     * Numberの拡張
+     */
+    
+    /**
+     * @method  round
+     * 四捨五入
+     * 桁数指定版
+     */
+    Number.defineInstanceMethod("round", function(figure) {
+        figure = figure || 0;
+        var base = Math.pow(10, figure);
+        var temp = this * base;
+        temp = Math.round(temp);
+        return temp/base;
+    });
+    
+    /**
+     * @method  ceil
+     * 切り上げ.
+     * 桁数指定版
+     */
+    Number.defineInstanceMethod("ceil",  function(figure) {
+        figure = figure || 0;
+        var base = Math.pow(10, figure);
+        var temp = this * base;
+        temp = Math.ceil(temp);
+        return temp/base;
+    });
+    /**
+     * @method  floor
+     * 切り捨て
+     * 桁数指定版
+     */
+    Number.defineInstanceMethod("floor",  function(figure) {
+        figure = figure || 0;
+        var base = Math.pow(10, figure);
+        var temp = this * base;
+        temp = Math.floor(temp);
+        
+        // ~~this
+        // this|0
+        
+        return temp/base;
+    });
+    
+    /**
+     * @method  toInt
+     * integer 型に変換する
+     */
+    Number.defineInstanceMethod("toInt",  function() {
+        return (this | 0);
+    });
+    
+    /**
+     * @method  toHex
+     * 16進数化
+     */
+    Number.defineInstanceMethod("toHex",  function() {
+        return this.toString(16);
+    });
+    
+    /**
+     * @method  toBin
+     * 2進数化
+     */
+    Number.defineInstanceMethod("toBin",  function() {
+        return this.toString(2);
+    });
+    
+    
+    /**
+     * @method  toUnsigned
+     * unsigned 型に変換する
+     */
+    Number.defineInstanceMethod("toUnsigned",  function() {
+        return this >>> 0;
+    });
+    
+    /**
+     * @method  padding
+     * 文字埋め
+     */
+    Number.defineInstanceMethod("padding",  function(n, ch) {
+        var str = this+'';
+        n  = n-str.length;
+        ch = ch || '0';
+        
+        while(n-- > 0) { str = ch + str; }
+        
+        return str;
+    });
+    
+    /**
+     * @method  times
+     * 数値分繰り返す
+     */
+    Number.defineInstanceMethod("times",  function(fn, self) {
+        self = self || this;
+        for (var i=0; i<this; ++i) {
+            fn.call(self, i);
+        }
+        return this;
+    });
+    
+    /**
+     * @method  upto
+     * インクリメント繰り返し
+     */
+    Number.defineInstanceMethod("upto",  function(t, fn, self) {
+        self = self || this;
+        for (var i=+this; i<=t; ++i) {
+            fn.call(self, i);
+        }
+        return this;
+    });
+    
+    /**
+     * @method  upto
+     * デクリメント繰り返し
+     */
+    Number.defineInstanceMethod("downto",  function(t, fn, self) {
+        self = self || this;
+        for (var i=+this; i>=t; --i) {
+            fn.call(self, i);
+        }
+        return this;
+    });
+
+    /**
+     * @method step
+     * ステップ繰り返し(float対応)
+     */
+    Number.defineInstanceMethod("step",  function(limit, step, fn, self) {
+        self = self || this;
+        for (var i=+this; i<=limit; i+=step) {
+            fn.call(self, i);
+        }
+        return this;
+    });
+
+    
+})();
+
+
+/*
+ * array.js
+ */
+
+(function() {
+    
+    /**
+     * @class   global.Array
+     * Arrayの拡張
+     * 
+     *      @example display
+     *      [1, 2, 3].first;
+     */
+    
+    /**
+     * @property    first
+     * 最初の要素
+     */
+    Array.prototype.accessor("first", {
+        "get": function()   { return this[0]; },
+        "set": function(v)  { this[0] = v; }
+    });
+    
+    /**
+     * @property    last
+     * 最後の要素
+     */
+    Array.prototype.accessor("last", {
+        "get": function()   { return this[this.length-1]; },
+        "set": function(v)  { this[this.length-1] = v; }
+    });
+
+    /**
+     * @method  equals
+     * 渡された配列と等しいかどうかをチェック
+     */
+    Array.defineInstanceMethod("equals", function(arr) {
+        // 長さチェック
+        if (this.length !== arr.length) return false;
+        
+        for (var i=0,len=this.length; i<len; ++i) {
+            if (this[i] !== arr[i]) {
+                return false;
+            }
+        }
+        return true;
+    });
+    
+    /**
+     * @method  deepEquals
+     * ネストされている配列含め渡された配列と等しいかどうかをチェック
+     * equalsDeep にするか検討. (Java では deepEquals なのでとりあえず合わせとく)
+     */
+    Array.defineInstanceMethod("deepEquals", function(arr) {
+        // 長さチェック
+        if (this.length !== arr.length) return false;
+        
+        for (var i=0,len=this.length; i<len; ++i) {
+            var result = (this[i].deepEquals) ? this[i].deepEquals(arr[i]) : (this[i] === arr[i]);
+            if (result === false) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    /**
+     * @property    contains
+     * 要素が含まれいるかをチェック
+     */
+    Array.defineInstanceMethod("contains", function(item, fromIndex) {
+        return this.indexOf(item, fromIndex) != -1;
+    });
+    
+    /**
+     * @method  at
+     * ループ添字アクセス(Ruby っぽいやつ)
+     */
+    Array.defineInstanceMethod("at", function(i) {
+        i%=this.length;
+        i+=this.length;
+        i%=this.length;
+        return this[i];
+    });
+    
+    
+    /**
+     * @method  swap
+     * a番目 と b番目 を入れ替える
+     */
+    Array.defineInstanceMethod("swap", function(a, b) {
+        var temp = this[a];
+        this[a] = this[b];
+        this[b] = temp;
+        
+        return this;
+    });
+    
+    
+    /**
+     * @method  erase
+     * elm と一致する要素を削除
+     */
+    Array.defineInstanceMethod("erase", function(elm) {
+        var index  = this.indexOf(elm);
+        if (index >= 0) {
+            this.splice(index, 1);
+        }
+        return this;
+    });
+    
+    /**
+     * @method  eraseAll
+     * elm と一致する要素を全て削除
+     */
+    Array.defineInstanceMethod("eraseAll", function(elm) {
+        for (var i=0,len=this.length; i<len; ++i) {
+            if (this[i] == elm) {
+                this.splice(i--, 1);
+            }
+        }
+        return this;
+    });
+    
+    /**
+     * @method  eraseIf
+     * 条件にマッチした要素を削除
+     */
+    Array.defineInstanceMethod("eraseIf", function(fn) {
+        for (var i=0,len=this.length; i<len; ++i) {
+            if ( fn(this[i], i, this) ) {
+                this.splice(i, 1);
+                break;
+            }
+            // if ( fn(this[i], i, this) ) { this.splice(i--, 1); }
+        }
+        return this;
+    });
+    
+    /**
+     * @method  eraseIfAll
+     * 条件にマッチした要素を削除
+     */
+    Array.defineInstanceMethod("eraseIfAll", function(fn) {
+        for (var i=0,len=this.length; i<len; ++i) {
+            if ( fn(this[i], i, this) ) {
+                this.splice(i, 1);
+            }
+        }
+        return this;
+    });
+    
+    /**
+     * @method  random
+     * 要素の中からランダムで取り出す
+     */
+    Array.defineInstanceMethod("random", function(min, max) {
+        min = min || 0;
+        max = max || this.length-1;
+        return this[ Math.rand(min, max) ];
+    });
+    
+    /**
+     * @method  pickup
+     * 要素の中からランダムで取り出す
+     */
+    Array.defineInstanceMethod("pickup", function(min, max) {
+        min = min || 0;
+        max = max || this.length-1;
+        return this[ Math.rand(min, max) ];
+    });
+    
+    /**
+     * @method  uniq
+     * 重複削除
+     */
+    Array.defineInstanceMethod("uniq", function(deep) {
+        return this.filter(function(value, index, self) {
+            return self.indexOf(value) === index;
+        });
+    });
+    
+
+    /**
+     * @method  flatten
+     * フラット.
+     * Ruby のやつ.
+     */
+    Array.defineInstanceMethod("flatten", function(level) {
+        var arr = null;
+
+        if (level) {
+            arr = this;
+            for (var i=0; i<level; ++i) {
+                arr = Array.prototype.concat.apply([], arr);
+            }
+        }
+        else {
+            // 完全フラット
+            arr = this.reduce(function (previousValue, curentValue) {
+                return Array.isArray(curentValue) ?
+                    previousValue.concat(curentValue.flatten()) : previousValue.concat(curentValue);
+            }, []);
+        }
+
+        return arr;
+    });
+    
+    /**
+     * @method  clone
+     * 配列をクローン
+     */
+    Array.defineInstanceMethod("clone", function(deep) {
+        if (deep == true) {
+            var a = Array(this.length);
+            for (var i=0,len=this.length; i<len; ++i) {
+                a[i] = (this[i].clone) ? this[i].clone(deep) : this[i];
+            }
+            return a;
+        };
+        
+        return Array.prototype.slice.apply(this);
+    });
+    
+    /**
+     * @method  clear
+     * クリア
+     */
+    Array.defineInstanceMethod("clear", function() {
+        this.length = 0;
+        return this;
+    });
+    
+    /**
+     * @method  fill
+     * 特定の値で満たす
+     */
+    Array.defineInstanceMethod("fill", function(value, start, end) {
+        start = start || 0;
+        end   = end   || (this.length);
+        
+        for (var i=start; i<end; ++i) {
+            this[i] = value;
+        }
+        
+        return this;
+    });
+    
+
+    /**
+     * @method  range
+     * python のやつ
+     */
+    Array.defineInstanceMethod("range", function(start, end, step) {
+        if (arguments.length == 1) {
+            this.clear();
+            for (var i=0; i<start; ++i) this[i] = i;
+        }
+        else if (start < end){
+            step  = step || 1;
+            this.clear();
+            for (var i=start, index=0; i<end; i+=step, ++index) {
+                this[index] = i;
+            }
+        }
+        else {
+            step  = step || -1;
+            this.clear();
+            for (var i=start, index=0; i>end; i+=step, ++index) {
+                this[index] = i;
+            }
+        }
+        
+        return this;
+    });
+    
+    /**
+     * @method  shuffle
+     * シャッフル
+     */
+    Array.defineInstanceMethod("shuffle", function() {
+        for (var i=0,len=this.length; i<len; ++i) {
+            var j = Math.rand(0, len-1);
+            
+            if (i != j) {
+                this.swap(i, j);
+            }
+        }
+        
+        return this;
+    });
+
+    /**
+     * @method  sum
+     * 合計
+     */
+    Array.defineInstanceMethod("sum", function() {
+        var sum = 0;
+        for (var i=0,len=this.length; i<len; ++i) {
+            sum += this[i];
+        }
+        return sum;
+    });
+
+    /**
+     * @method  average
+     * 平均
+     */
+    Array.defineInstanceMethod("average", function() {
+        var sum = 0;
+        var len = this.length;
+        for (var i=0; i<len; ++i) {
+            sum += this[i];
+        }
+        return sum/len;
+    });
+
+    /**
+     * @method  each
+     * 繰り返し
+     * チェーンメソッド対応
+     */
+    Array.defineInstanceMethod("each", function() {
+        this.forEach.apply(this, arguments);
+        return this;
+    });
+
+    
+    /**
+     * @method  toULElement
+     * ULElement に変換
+     */
+    Array.defineInstanceMethod("toULElement", function(){
+        // TODO: 
+    });
+
+    /**
+     * @method  toOLElement
+     * OLElement に変換
+     */
+    Array.defineInstanceMethod("toOLElement", function(){
+        // TODO:
+    });
+
+    
+    /**
+     * @static
+     * @method  range
+     * range
+     */
+    Array.defineFunction("range", function(start, end, step) {
+        return Array.prototype.range.apply([], arguments);
+    });
+    
+})();
+
+
+/*
+ * function.js
+ */
+
+(function() {
+    
+    /**
+     * @class   global.Function
+     * Functionの拡張
+     */
+    if (!Function.prototype.bind) {
+        /**
+         * @member  global.Function
+         * @method  bind
+         * バインド
+         */
+        Function.defineInstanceMethod("bind", function(obj) {
+            var self = this;
+            
+            return function() {
+                self.apply(obj, arguments);
+            };
+        });
+    }
+
+
+    // 関数名（無名関数は空文字列）を取得 (IE用パッチ)
+    if (!Function.prototype.$has("name")) {
+        Function.prototype.getter("name", function() {
+            return (''+this).replace(/^\s*function\s*([^\(]*)[\S\s]+$/im, '$1');
+        });
+    }
+    
+
+    /**
+     * @method  toArrayFunction
+     * 関数を配列対応関数に変換.
+     * forEach の逆アプローチ的な感じ.
+     * 配列を継承したクラスなどに使用する.
+     * ## Example
+     *      var hoge = function(n) { console.log(this*n); return this*n; };
+     *      var arr = [5, 10, 15];
+     *      arr.hogeArray = hoge.toArrayFunction();
+     *      var result = arr.hogeArray(100);
+     *      console.log(result);
+     */
+    Function.defineInstanceMethod("toArrayFunction", function() {
+        var self = this;
+        return function() {
+            var resultList = [];
+            for (var i=0,len=this.length; i<len; ++i) {
+                resultList.push( self.apply(this[i], arguments) );
+            }
+            return resultList;
+        }
+    });
+    
+    // forEach や map はもう標準化されてきてるので実装しないよん♪
+    
+})();
+
+
+/*
+ * math.js
+ */
+
+(function() {
+    
+    /**
+     * @class global.Math
+     * Mathの拡張
+     */
+
+    
+    /**
+     * @property    DEG_TO_RAD
+     * Degree to Radian.
+     */
+    Math.DEG_TO_RAD = Math.PI/180;
+    
+    /**
+     * @property    RAD_TO_DEG
+     * Radian to Degree.
+     */
+    Math.RAD_TO_DEG = 180/Math.PI;
+    
+    /**
+     * @method
+     * Degree を Radian に変換
+     */
+    Math.degToRad = function(deg) {
+        return deg * Math.DEG_TO_RAD;
+    };
+    
+    /**
+     * @method
+     * Radian を Degree に変換
+     */
+    Math.radToDeg = function(rad) {
+        return rad * Math.RAD_TO_DEG;
+    };
+    
+
+    
+    /**
+     * @method
+     * クランプ
+     */
+    Math.defineFunction("clamp", function(value, min, max) {
+        return (value < min) ? min : ( (value > max) ? max : value );
+    });
+    
+    /**
+     * @method
+     * min <= value <= max のとき true を返す
+     */
+    Math.defineFunction("inside", function(value, min, max) {
+        return (value >= min) && (value) <= max;
+    });
+    
+    /**
+     * @method
+     * ランダムな値を指定された範囲内で生成
+     */
+    Math.defineFunction("rand", function(min, max) {
+        return window.Math.floor( Math.random()*(max-min+1) ) + min;
+    });
+    
+    /**
+     * @method
+     * ランダムな値を指定された範囲内で生成
+     */
+    Math.defineFunction("randf", function(min, max) {
+        return window.Math.random()*(max-min)+min;
+    });
+    
+})();
+
+
+/*
+ * date.js
+ */
+
+(function() {
+    
+    /**
+     * @class   global.Date
+     * Date(日付)の拡張
+     */
+    
+    var MONTH = [
+        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ];
+    
+    var WEEK = [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ];
+    
+    /**
+     * @method  format
+     * 日付フォーマットに合わせた文字列を返す
+     */
+    Date.defineInstanceMethod("format", function(pattern) {
+        /*
+        var str = "{y}/{m}/{d}".format({
+            y: this.getYear()+1900,
+            m: this.getMonth()+1,
+            d: this.getDate(),
+        });
+        
+        return str;
+        */
+        
+        var year    = this.getFullYear();
+        var month   = this.getMonth();
+        var date    = this.getDate();
+        var day     = this.getDay();
+        var hours   = this.getHours();
+        var minutes = this.getMinutes();
+        var seconds = this.getSeconds();
+        var millseconds = this.getMilliseconds();
+        var str = "";
+        
+        for (var i=0,len=pattern.length; i<len; ++i) {
+            var ch = pattern.charAt(i);
+            var temp = "";
+            switch(ch) {
+                // 日
+                case "d": temp = date.padding(2, '0'); break;
+                case "D": temp = WEEK[day].substr(0, 3); break;
+                case "j": temp = date; break;
+                case "l": temp = WEEK[day]; break;
+                // case "N": temp = ; break;
+                // case "S": temp = ; break;
+                // case "w": temp = ; break;
+                // case "z": temp = ; break;
+                
+                // 月
+                case "F": temp = MONTH[month]; break;
+                case "m": temp = (month+1).padding(2, '0'); break;
+                case "M": temp = MONTH[month].substr(0, 3); break;
+                case "n": temp = (month+1); break;
+                // case "t": temp = (month+1); break;
+                
+                // 年
+                // case "L": temp = ; break;
+                // case "o": temp = ; break;
+                case "Y": temp = year; break;
+                case "y": temp = year.toString().substr(2, 2); break;
+                
+                
+                // 時間
+                // case "a": temp = ; break;
+                // case "A": temp = ; break;
+                // case "B": temp = ; break;
+                // case "g": temp = ; break;
+                case "G": temp = hours; break;
+                // case "h": temp = ; break;
+                case "H": temp = hours.padding(2, '0'); break;
+                case "i": temp = minutes.padding(2, '0'); break;
+                case "s": temp = seconds.padding(2, '0'); break;
+                case "S": temp = millseconds.padding(3, '0'); break;
+                
+                default : temp = ch; break;
+            }
+            str += temp;
+        }
+        return str;
+    });
+    
+})();
+

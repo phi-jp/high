@@ -6,13 +6,13 @@
 module.exports = function(grunt) {
     var pkg = grunt.file.readJSON('package.json');
     var target = [
-        "src/array.js",
-        "src/date.js",
-        "src/function.js",
-        "src/math.js",
-        "src/number.js",
         "src/object.js",
         "src/string.js",
+        "src/number.js",
+        "src/array.js",
+        "src/function.js",
+        "src/math.js",
+        "src/date.js",
     ];
     var banner = '\
 /*\n\
