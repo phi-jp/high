@@ -3,6 +3,8 @@
 high is a  JavaScript library.  
 It is a library to add the function that the JavaScript should originally have to.
 
+Used in [tmlib.js](http://phi-jp.github.io/tmlib.js/).
+
 
 ## Installation
 
