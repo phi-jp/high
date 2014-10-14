@@ -7,7 +7,7 @@ high is a  JavaScript library
 
 Browser
 
-```js
+```html
 <script src="high.js"></script>
 ```
 
