@@ -88,6 +88,27 @@
         }
         return str;
     });
+
+
+    Date.defineFunction("calculateAge", function(birthday, when) {
+        // birthday
+        if (typeof birthday === 'string') {
+            birthday = new Date(birthday);
+        }
+        // when
+        if (!when) {
+            when = new Date();
+        }
+        else if (typeof when === 'string') {
+            when = new Date(when);
+        }
+
+        var bn = new Date(birthday.getTime()).setFullYear(256);
+        var wn = new Date(when.getTime()).setFullYear(256);
+        var step = (wn < bn) ? 1 : 0;
+
+        return (when.getFullYear() - birthday.getFullYear()) - step;
+    });
     
 })();
 

@@ -123,7 +123,7 @@
     });
     
     /**
-     * @method  upto
+     * @method  downto
      * デクリメント繰り返し
      */
     Number.defineInstanceMethod("downto",  function(t, fn, self) {

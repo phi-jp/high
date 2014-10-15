@@ -65,7 +65,7 @@
     });
 
     /**
-     * @property    contains
+     * @method    contains
      * 要素が含まれいるかをチェック
      */
     Array.defineInstanceMethod("contains", function(item, fromIndex) {
@@ -95,11 +95,11 @@
         
         return this;
     });
-    
-    
+
     /**
      * @method  erase
      * elm と一致する要素を削除
+     * イレース
      */
     Array.defineInstanceMethod("erase", function(elm) {
         var index  = this.indexOf(elm);
@@ -132,7 +132,6 @@
                 this.splice(i, 1);
                 break;
             }
-            // if ( fn(this[i], i, this) ) { this.splice(i--, 1); }
         }
         return this;
     });
@@ -144,7 +143,7 @@
     Array.defineInstanceMethod("eraseIfAll", function(fn) {
         for (var i=0,len=this.length; i<len; ++i) {
             if ( fn(this[i], i, this) ) {
-                this.splice(i, 1);
+                this.splice(i--, 1);
             }
         }
         return this;
@@ -252,20 +251,19 @@
      * python のやつ
      */
     Array.defineInstanceMethod("range", function(start, end, step) {
+        this.clear();
+        
         if (arguments.length == 1) {
-            this.clear();
             for (var i=0; i<start; ++i) this[i] = i;
         }
         else if (start < end){
             step  = step || 1;
-            this.clear();
             for (var i=start, index=0; i<end; i+=step, ++index) {
                 this[index] = i;
             }
         }
         else {
             step  = step || -1;
-            this.clear();
             for (var i=start, index=0; i>end; i+=step, ++index) {
                 this[index] = i;
             }

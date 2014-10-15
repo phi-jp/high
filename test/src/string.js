@@ -59,5 +59,20 @@ describe('#String', function() {
         assert("12345".toArray().equals(['1', '2', '3', '4', '5']));
         assert("あいうえお".toArray().equals(['あ', 'い', 'う', 'え', 'お']));
     });
+
+    it('toObjectAsQuery', function() {
+        var obj = "num=128.5&flag1=true&flag2=false&str=hoge".toObjectAsQuery();
+
+        assert.equal(obj.num, 128.5);
+        assert.equal(obj.flag1, true);
+        assert.equal(obj.flag2, false);
+        assert.equal(obj.str, "hoge");
+
+        obj = "num:-64.5|flag1:false|flag2:true|str:foo".toObjectAsQuery('|', ':');
+        assert.equal(obj.num, -64.5);
+        assert.equal(obj.flag1, false);
+        assert.equal(obj.flag2, true);
+        assert.equal(obj.str, "foo");
+    });
     
 });

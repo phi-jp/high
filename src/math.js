@@ -41,7 +41,7 @@
 
     
     /**
-     * @method
+     * @method clamp
      * クランプ
      */
     Math.defineFunction("clamp", function(value, min, max) {
@@ -49,7 +49,7 @@
     });
     
     /**
-     * @method
+     * @method inside
      * min <= value <= max のとき true を返す
      */
     Math.defineFunction("inside", function(value, min, max) {
@@ -57,7 +57,7 @@
     });
     
     /**
-     * @method
+     * @method rand
      * ランダムな値を指定された範囲内で生成
      */
     Math.defineFunction("rand", function(min, max) {
@@ -65,7 +65,7 @@
     });
     
     /**
-     * @method
+     * @method randf
      * ランダムな値を指定された範囲内で生成
      */
     Math.defineFunction("randf", function(min, max) {
