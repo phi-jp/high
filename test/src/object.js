@@ -1,5 +1,41 @@
 
 describe('#Object', function() {
+
+    it('setter', function() {
+        var phi = {};
+
+        phi.setter('bloodType', function(v) {
+            this._bloodType = v;
+        });
+        phi.bloodType = 'O';
+
+        assert.equal(phi._bloodType, 'O');
+    });
+
+    it('getter', function() {
+        var phi = {};
+
+        phi.getter('age', function() {
+            return 26;
+        });
+
+        assert.equal(phi.age, 26);
+    });
+
+    it('accessor', function() {
+        var phi = {};
+
+        phi.accessor('name', {
+            'set': function(v) { this._name = v; },
+            'get': function() { return this._name; },
+        });
+
+
+        assert.equal(phi.name, undefined);
+        phi.name = 'phi';
+        assert.equal(phi.name, 'phi');
+        assert.equal(phi._name, 'phi');
+    });
     
     it('$forIn', function() {
         var obj = { name: 'phi', age: 25, bloodType: 'O' };
