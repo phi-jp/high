@@ -17,7 +17,7 @@ Browser
 Node.js
 
 ```bash
-$ npm install high
+$npm install high
 ```
 
 ```js
