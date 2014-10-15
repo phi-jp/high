@@ -46,6 +46,20 @@ module.exports = function(grunt) {
                 },
             },
         },
+        shell: {
+            docs: {
+                command: 'jsduck ./src --output ./docs --title "high docs"',
+                options: {
+                    stdout: true,
+                    callback: function(err, stdout, stderr, cb) {
+                        console.log(err);
+                        console.log(stdout);
+                        console.log(stderr);
+                        console.log(cb);
+                    },
+                },
+            },
+        }
     });
 
     for (var key in pkg.devDependencies) {
@@ -55,5 +69,6 @@ module.exports = function(grunt) {
     }
 
     grunt.registerTask('default', ['concat', 'uglify']);
+    grunt.registerTask('docs', ['shell:docs']);
 };
 

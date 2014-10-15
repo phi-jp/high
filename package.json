@@ -1,6 +1,6 @@
 {
   "name": "high",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "high is a JavaScript library",
   "main": "high.js",
   "scripts": {
