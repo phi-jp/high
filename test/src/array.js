@@ -128,6 +128,14 @@ describe('#Array', function() {
         var arr = [0, 1, 2, 3, 4, 5, 6, 6, 5, 4, 3, 2, 1, 100];
         assert(arr.uniq().equals([0, 1, 2, 3, 4, 5, 6, 100]));
     });
+
+    it('of', function() {
+        assert(Array.of(1, 2, 3).equals([1, 2, 3]));
+    });
+
+    it('from', function() {
+        assert(Array.from("foo").equals(['f', 'o', 'o']));
+    });
     
 });
 
