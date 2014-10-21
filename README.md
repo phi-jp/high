@@ -36,4 +36,4 @@ Coming soon...
 
 ## Author
 
-@[phi_jp](http://twitter.com/phi_jp) in twitter
+@[phi_jp](http://twitter.com/phi_jp), @[yosuke_furukawa](http://twitter.com/yosuke_furukawa) in twitter
