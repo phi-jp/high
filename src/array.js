@@ -353,6 +353,44 @@
     Array.defineFunction("range", function(start, end, step) {
         return Array.prototype.range.apply([], arguments);
     });
+
+
+    /**
+     * @method of
+     * of関数 可変長引数をとってArrayにして返す
+     * @example:
+     * Array.of('a', 'b', 'c'); // ['a', 'b', 'c']
+     * ES6準拠
+     */
+    Array.defineFunction("of", function() {
+        return Array.prototype.slice.call(arguments);
+    });
+
+    /**
+     * @method from
+     * from関数 Array like objectに対してArrayのメソッドを追加する
+     * @example:
+	   *
+	   * 1.
+	   * function array () {
+	   *   return Array.from(arguments);
+	   * }
+	   *
+	   * array(1,2,3); // [1, 2, 3];
+	   *
+	   * 2.
+	   * Array.from(document.body).forEach(function(item) {
+	   *    return item;
+	   * });
+	   *
+     * ES6準拠
+     */
+    Array.defineFunction("from", function(arrayLike, callback, context) {
+        if (!Object(arrayLike).length) return [];
+
+		    return Array.prototype.map.call(arrayLike, typeof callback == 'function' ? callback : function(item) {
+		      	return item;
+		    }, context);
+    });
     
 })();
-
