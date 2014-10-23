@@ -48,7 +48,7 @@ module.exports = function(grunt) {
         },
         shell: {
             docs: {
-                command: 'jsduck ./src --output ./docs --title "high docs"',
+                command: 'jsduck ./src --output ./docs --title "high docs" --eg-iframe=docs-frame.html',
                 options: {
                     stdout: true,
                     callback: function(err, stdout, stderr, cb) {

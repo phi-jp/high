@@ -9,7 +9,11 @@
      * Arrayの拡張
      * 
      *      @example display
-     *      [1, 2, 3].first;
+     *      var arr = [1, 2, 3];
+     *
+     *      document.write(arr.first); // 1
+     *      document.write(arr.last);  // 3
+     *      document.write(arr.sum()); // 6
      */
     
     /**

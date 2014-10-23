@@ -613,6 +613,7 @@
      * 
      *      @example display
      *      [1, 2, 3].first;
+     *      document.write("Hello, world!");
      */
     
     /**
