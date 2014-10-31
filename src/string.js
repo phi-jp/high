@@ -10,7 +10,6 @@
      * `String` is a global object that may be used to construct String instances.
      */
     
-    
     /**
      * @method  format
      * フォーマット
@@ -172,6 +171,15 @@
     String.defineInstanceMethod("count", function(str) {
         var re = new RegExp(str, 'gm');
         return this.match(re).length;
+    });
+    
+    /**
+     * @method  include
+     * 含んでいるかを返す
+     * ruby のやつ
+     */
+    String.defineInstanceMethod("include", function(str) {
+        return this.indexOf(str) != -1;
     });
     
     /**

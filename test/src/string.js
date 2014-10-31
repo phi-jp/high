@@ -55,6 +55,11 @@ describe('#String', function() {
         assert.equal("This is a string.".count("is"), 2);
     });
 
+    it('include', function() {
+        assert.equal("This is a string.".include("is"), true);
+        assert.equal("This is a string.".include("was"), false);
+    });
+
     it('toArray', function() {
         assert("12345".toArray().equals(['1', '2', '3', '4', '5']));
         assert("あいうえお".toArray().equals(['あ', 'い', 'う', 'え', 'お']));

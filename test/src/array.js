@@ -42,14 +42,27 @@ describe('#Array', function() {
         assert.equal(arr.contains(7), false);
     });
     
-    it('at', function()
-    {
+    it('at', function() {
         var arr = [1, 2, 3, 4, 5, 6];
         assert.equal(arr.at(0), 1);
         assert.equal(arr.at(20), 3);
         assert.equal(arr.at(100), 5);
         assert.equal(arr.at(-1), 6);
         assert.equal(arr.at(-10), 3);
+    });
+
+    it('find', function() {
+        var arr = [1, 2, 3, 4, 5, 6];
+        assert.equal(arr.find(function(elm) {
+            return elm == 2;
+        }), 2);
+    });
+
+    it('findIndex', function() {
+        var arr = [2, 4, 8, 16, 32];
+        assert.equal(arr.findIndex(function(elm) {
+            return elm == 8;
+        }), 2);
     });
     
     it('swap', function() {

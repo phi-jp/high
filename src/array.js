@@ -86,7 +86,33 @@
         i%=this.length;
         return this[i];
     });
-    
+
+
+    Array.defineInstanceMethod("find", function(fn, self) {
+        var target = null;
+
+        this.some(function(elm, i) {
+            if (fn.call(self, elm, i, this)) {
+                target = elm;
+                return true;
+            }
+        });
+
+        return target;
+    });
+
+    Array.defineInstanceMethod("findIndex", function(fn, self) {
+        var target = null;
+
+        this.some(function(elm, i) {
+            if (fn.call(self, elm, i, this)) {
+                target = i;
+                return true;
+            }
+        });
+
+        return target;
+    });
     
     /**
      * @method  swap
