@@ -3,6 +3,7 @@
  */
 
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var ghelper = require('gulp-helper');
 ghelper.require();
 var pkg = require('./package.json');
@@ -35,5 +36,9 @@ gulp.task('uglify', function() {
 	      extname: '.min.js'
 	    }))
     	.pipe(gulp.dest('.'))
+    	.on('end', function() {
+			util.log(util.colors.blue('finish'));
+			gutil.beep();
+    	})
     	;
 });

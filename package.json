@@ -26,6 +26,7 @@
     "gulp-helper": "^1.0.3",
     "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.5.2",
-    "gulp-uglify": "^1.1.0"
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.3"
   }
 }
