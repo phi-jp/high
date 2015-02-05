@@ -5,6 +5,8 @@
  * 
  * Copyright (C) 2010 phi, http://tmlife.net
  */
+
+
 /*
  * object.js
  */
@@ -221,7 +223,6 @@
      * `String` is a global object that may be used to construct String instances.
      */
     
-    
     /**
      * @method  format
      * フォーマット
@@ -383,6 +384,15 @@
     String.defineInstanceMethod("count", function(str) {
         var re = new RegExp(str, 'gm');
         return this.match(re).length;
+    });
+    
+    /**
+     * @method  include
+     * 含んでいるかを返す
+     * ruby のやつ
+     */
+    String.defineInstanceMethod("include", function(str) {
+        return this.indexOf(str) != -1;
     });
     
     /**
@@ -689,7 +699,33 @@
         i%=this.length;
         return this[i];
     });
-    
+
+
+    Array.defineInstanceMethod("find", function(fn, self) {
+        var target = null;
+
+        this.some(function(elm, i) {
+            if (fn.call(self, elm, i, this)) {
+                target = elm;
+                return true;
+            }
+        });
+
+        return target;
+    });
+
+    Array.defineInstanceMethod("findIndex", function(fn, self) {
+        var target = null;
+
+        this.some(function(elm, i) {
+            if (fn.call(self, elm, i, this)) {
+                target = i;
+                return true;
+            }
+        });
+
+        return target;
+    });
     
     /**
      * @method  swap
@@ -771,6 +807,16 @@
      * 要素の中からランダムで取り出す
      */
     Array.defineInstanceMethod("pickup", function(min, max) {
+        min = min || 0;
+        max = max || this.length-1;
+        return this[ Math.rand(min, max) ];
+    });
+    
+    /**
+     * @method  pickup
+     * 要素の中からランダムで取り出す
+     */
+    Array.defineInstanceMethod("lot", function(min, max) {
         min = min || 0;
         max = max || this.length-1;
         return this[ Math.rand(min, max) ];

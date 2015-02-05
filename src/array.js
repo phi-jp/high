@@ -200,6 +200,16 @@
     });
     
     /**
+     * @method  pickup
+     * 要素の中からランダムで取り出す
+     */
+    Array.defineInstanceMethod("lot", function(min, max) {
+        min = min || 0;
+        max = max || this.length-1;
+        return this[ Math.rand(min, max) ];
+    });
+    
+    /**
      * @method  uniq
      * 重複削除
      */

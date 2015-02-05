@@ -109,10 +109,18 @@ describe('#Array', function() {
     
     it('pickup', function() {
         var arr = [1, 2, 3, 4, 5, 6];
-    	for (var i=0; i<128; ++i) {
-    		var n = arr.random();
-	        assert(1 <= n && n <= 6);
-    	}
+        for (var i=0; i<128; ++i) {
+            var n = arr.random();
+            assert(1 <= n && n <= 6);
+        }
+    });
+    
+    it('lot', function() {
+        var arr = [1, 2, 3, 4, 5, 6];
+        for (var i=0; i<128; ++i) {
+            var n = arr.random();
+            assert(1 <= n && n <= 6);
+        }
     });
     
     it('range', function() {
