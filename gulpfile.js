@@ -7,9 +7,7 @@ var ghelper = require('gulp-helper');
 ghelper.require();
 var pkg = require('./package.json');
 
-gulp.task('default', function() {
-	console.log("hoge");
-});
+gulp.task('default', ['concat', 'uglify']);
 
 gulp.task('concat', function() {
     var target = [
