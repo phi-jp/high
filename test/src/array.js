@@ -97,6 +97,23 @@ describe('#Array', function() {
         	return (elm%2) == 0;
         });
         assert(arr.equals([1, 3, 5]));
+
+        var arr = [
+            {value:5},
+            {value:10},
+            {value:15},
+            {value:20},
+        ];
+        var temp = [
+            {value:10},
+            {value:15},
+            {value:20},
+        ];
+        arr.eraseIfAll(function(elm) {
+            return elm.value === 5;
+        });
+
+        assert(JSON.stringify(arr) === JSON.stringify(temp));
     });
     
     it('random', function() {
