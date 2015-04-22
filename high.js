@@ -1,5 +1,5 @@
 /*
- * high.js 0.0.3
+ * high.js 0.0.4
  * http://github.com/phi-jp/high
  * MIT Licensed
  * 
@@ -787,6 +787,7 @@
         for (var i=0,len=this.length; i<len; ++i) {
             if ( fn(this[i], i, this) ) {
                 this.splice(i--, 1);
+                len--;
             }
         }
         return this;
