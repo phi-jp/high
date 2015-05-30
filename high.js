@@ -607,7 +607,85 @@
         return this;
     });
 
-    
+    /**
+     * @method abs
+     * 絶対値
+     */
+    Number.defineInstanceMethod("abs", function() { return Math.abs(this) });
+
+    /**
+     * @method acos
+     * アークコサイン
+     */
+    Number.defineInstanceMethod("acos", function() { return Math.acos(this) });
+
+    /**
+     * @method asin
+     * アークサイン
+     */
+    Number.defineInstanceMethod("asin", function() { return Math.asin(this) });
+
+    /**
+     * @method atan
+     * アークタンジェント
+     */
+    Number.defineInstanceMethod("atan", function() { return Math.atan(this) });
+
+    /**
+     * @method cos
+     * コサイン
+     */
+    Number.defineInstanceMethod("cos", function() { return Math.cos(this) });
+
+    /**
+     * @method exp
+     * E^num
+     */
+    Number.defineInstanceMethod("exp", function() { return Math.exp(this) });
+
+    /**
+     * @method log
+     * 自然対数
+     */
+    Number.defineInstanceMethod("log", function() { return Math.log(this) });
+
+    /**
+     * @method max
+     * max
+     */
+    Number.defineInstanceMethod("max", function(value) { return Math.max(this, value) });
+
+    /**
+     * @method min
+     * min
+     */
+    Number.defineInstanceMethod("min", function(value) { return Math.min(this, value) });
+
+    /**
+     * @method pow
+     * 乗数
+     */
+    Number.defineInstanceMethod("pow", function(exponent) { return Math.pow(this, exponent) });
+
+    /**
+     * @method sin
+     * サイン
+     */
+    Number.defineInstanceMethod("sin", function() { return Math.sin(this) });
+
+    /**
+     * @method sqrt
+     * 平方根
+     */
+    Number.defineInstanceMethod("sqrt", function() { return Math.sqrt(this) });
+
+    /**
+     * @method tan
+     * タンジェント
+     */
+    Number.defineInstanceMethod("tan", function() { return Math.tan(this) });
+
+
 })();
 
 
