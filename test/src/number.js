@@ -80,4 +80,69 @@ describe('#Number', function() {
         assert(arr.equals([2.4, 3.2, 4.0, 4.8]));
     });
 
+    it('abs', function() {
+        assert.equal((-5).abs(), 5);
+        assert.equal((+5).abs(), 5);
+    });
+
+    it('acos', function() {
+        assert.equal((1).acos(), 0);
+        assert.equal((0).acos(), Math.PI * 0.5);
+    });
+
+    it('asin', function() {
+        assert.equal((0).asin(), 0);
+        assert.equal((1).asin(), Math.PI * 0.5);
+    });
+
+    it('atan', function() {
+        assert.equal((0).atan(), 0);
+        assert.equal((1).atan(), Math.PI * 0.25);
+    });
+
+    it('cos', function() {
+        assert.equal((0).cos(), 1);
+        assert.equal((3).cos(), Math.cos(3));
+    });
+
+    it('exp', function() {
+        assert.equal((0).exp(), 1);
+        assert.equal((1).exp(), Math.E);
+    });
+
+    it('log', function() {
+        assert.equal((1).log(), 0);
+        assert.equal((Math.E).log(), 1);
+    });
+
+    it('max', function() {
+        assert.equal((5).max(1000), 1000);
+        assert.equal((1000).max(5), 1000);
+    });
+
+    it('min', function() {
+        assert.equal((5).min(1000), 5);
+        assert.equal((1000).min(5), 5);
+    });
+
+    it('pow', function() {
+        assert.equal((2).pow(2), 4);
+        assert.equal((2).pow(3), 8);
+    });
+
+    it('sin', function() {
+        assert.equal((0).sin(), 0);
+        assert.equal((3).sin(), Math.sin(3));
+    });
+
+    it('sqrt', function() {
+        assert.equal((4).sqrt(), 2);
+        assert.equal((100).sqrt(), 10);
+    });
+
+    it('tan', function() {
+        assert.equal((3).tan(), Math.tan(3));
+        assert.equal((5).tan(), Math.tan(5));
+    });
+
 });
